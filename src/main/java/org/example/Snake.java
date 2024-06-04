@@ -2,6 +2,7 @@ package org.example;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Random;
 
 public class Snake {
     private Tile snakeHead;
@@ -12,10 +13,40 @@ public class Snake {
     private boolean turnRight = false;
     private Direction direction = Direction.UP;
     private final Color color;
+    private boolean alive = true;
 
     Snake(Tile snakeHead, Color color) {
         this.snakeHead = snakeHead;
         this.color = color;
+    }
+
+    public ArrayList<Tile> getSurroundingTiles() {
+        ArrayList<Tile> surroundingTiles = new ArrayList<>();
+        Tile head = getSnakeHead();
+
+        switch (direction) {
+            case UP:
+            case DOWN:
+            case LEFT:
+            case RIGHT:
+            case UPLEFT:
+                surroundingTiles.add(new Tile(head.x - 1, head.y));
+                surroundingTiles.add(new Tile(head.x, head.y - 1));
+                break;
+            case DOWNRIGHT:
+                surroundingTiles.add(new Tile(head.x + 1, head.y));
+                surroundingTiles.add(new Tile(head.x, head.y + 1));
+                break;
+            case UPRIGHT:
+                surroundingTiles.add(new Tile(head.x + 1, head.y));
+                surroundingTiles.add(new Tile(head.x, head.y - 1));
+                break;
+            case DOWNLEFT:
+                surroundingTiles.add(new Tile(head.x - 1, head.y));
+                surroundingTiles.add(new Tile(head.x, head.y + 1));
+                break;
+        }
+        return surroundingTiles;
     }
 
     public int getVelocityX() {
@@ -76,6 +107,26 @@ public class Snake {
 
     public Color getColor() {
         return color;
+    }
+
+    public boolean isAlive() {
+        return alive;
+    }
+
+    public void setAlive(boolean alive) {
+        this.alive = alive;
+    }
+
+    public void reset(int positionX, int positionY) {
+        Random rand = new Random();
+        this.snakeHead = new Tile(positionX, positionY);
+        this.snakeBody.clear();
+        this.velocityX = 0;
+        this.velocityY = 0;
+        this.turnLeft = false;
+        this.turnRight = false;
+        this.direction = Direction.DOWN;
+        this.alive = true;
     }
 }
 
