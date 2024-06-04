@@ -6,6 +6,7 @@ public class Main {
     public static void main(String[] args) {
         int boardWidth = 800;
         int boardHeight = 800;
+        int players = 3;
 
         JFrame frame = new JFrame("Curve fever");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -14,7 +15,7 @@ public class Main {
         frame.setVisible(true);
         frame.setResizable(false);
 
-        Game game = new Game(boardWidth, boardHeight);
+        Game game = new Game(boardWidth, boardHeight, players);
         frame.add(game);
         frame.pack();
         game.requestFocus();
