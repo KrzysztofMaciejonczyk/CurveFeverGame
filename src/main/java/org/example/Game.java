@@ -14,8 +14,8 @@ import java.util.concurrent.*;
 
 public class Game extends JPanel implements ActionListener, KeyListener {
 
-    int boardWidth;
-    int boardHeight;
+    int gameBoardWidth;
+    int gameBoardHeight;
     int tileSize = 5;
 
     ArrayList<Snake> snakes = new ArrayList<>();
@@ -23,30 +23,35 @@ public class Game extends JPanel implements ActionListener, KeyListener {
     ArrayList<Integer> rightControls = new ArrayList<>();
     int playersLeft;
     int playersInit;
+    int[] wins;
 
     javax.swing.Timer gameLoop;
     boolean gameOver = false;
     boolean gameStarted = false;
     private final ExecutorService collisionExecutorService = Executors.newFixedThreadPool(4);
 
-    Game(int boardWidth, int boardHeight, int players) {
-        this.boardWidth = boardWidth;
-        this.boardHeight = boardHeight;
+    JPanel sidePanel;
+    ArrayList<JLabel> snakeStatsLabels = new ArrayList<>();
+
+    Game(int gameBoardWidth, int gameBoardHeight, int players) {
+        this.gameBoardWidth = gameBoardWidth;
+        this.gameBoardHeight = gameBoardHeight;
         playersLeft = players;
         playersInit = players;
-        setPreferredSize(new Dimension(boardWidth, boardHeight));
+        wins = new int[players];
+        setPreferredSize(new Dimension(gameBoardWidth, gameBoardHeight));
         setBackground(Color.BLACK);
         addKeyListener(this);
         setFocusable(true);
-
         Color[] colors = {Color.GREEN, Color.BLUE, Color.RED, Color.YELLOW};
         Random rand = new Random();
         for (int i = 0; i < players; i++) {
-            snakes.add(new Snake(new Tile(rand.nextInt(boardWidth/tileSize), rand.nextInt(boardHeight/tileSize)), colors[i]));
+            snakes.add(new Snake(new Tile(rand.nextInt(gameBoardWidth/tileSize), rand.nextInt(gameBoardHeight/tileSize)), colors[i]));
             snakes.get(i).setVelocityX(0);
             snakes.get(i).setVelocityY(0);
             snakes.get(i).setDirection(Direction.values()[rand.nextInt(8)]);
         }
+        setupSidePanel();
         switch (players) {
             case 1:
                 leftControls.add(KeyEvent.VK_LEFT);
@@ -91,6 +96,30 @@ public class Game extends JPanel implements ActionListener, KeyListener {
             }
         }, 2000);
     }
+    private void setupSidePanel() {
+        sidePanel = new JPanel();
+        sidePanel.setPreferredSize(new Dimension(250, gameBoardHeight));
+        sidePanel.setBackground(new Color(242, 232, 182));
+        JLabel title = new JLabel("DASHBOARD");
+        title.setFont(new Font("Comic Sans", Font.PLAIN, 35));
+        title.setForeground(Color.BLACK);
+        sidePanel.add(title);
+        for (int i = 0; i < playersInit; i++) {
+            JLabel label = new JLabel("Snake " + (i + 1) + ": " + wins[i]);
+            label.setFont(new Font("Comic Sans", Font.PLAIN, 30));
+            label.setBackground(snakes.get(i).getColor());
+            label.setForeground(Color.BLACK);
+            label.setOpaque(true);
+            label.setBorder(BorderFactory.createLineBorder(Color.BLACK, 3));
+            snakeStatsLabels.add(label);
+            sidePanel.add(label);
+        }
+    }
+    private void updateStats() {
+        for (int i = 0; i < playersInit; i++) {
+            snakeStatsLabels.get(i).setText("Snake " + (i + 1) + " Wins: " + wins[i]);
+        }
+    }
 
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -102,9 +131,9 @@ public class Game extends JPanel implements ActionListener, KeyListener {
             resetGame();
         }
         //Grid
-//        for (int x = 0; x < boardWidth/tileSize; x++) {
-//            g.drawLine(x*tileSize, 0, x*tileSize, boardHeight);
-//            g.drawLine(0, x*tileSize, boardWidth, x*tileSize);
+//        for (int x = 0; x < gameBoardWidth/tileSize; x++) {
+//            g.drawLine(x*tileSize, 0, x*tileSize, gameBoardHeight);
+//            g.drawLine(0, x*tileSize, gameBoardWidth, x*tileSize);
 //        }
         //Snakes
         for (Snake snake : snakes) {
@@ -129,8 +158,8 @@ public class Game extends JPanel implements ActionListener, KeyListener {
         ArrayList<Integer> positionsX = new ArrayList<>();
         ArrayList<Integer> positionsY = new ArrayList<>();
         for (int i = 0; i < playersInit; i++) {
-            positionsX.add(rand.nextInt(boardWidth/tileSize));
-            positionsY.add(rand.nextInt(boardHeight/tileSize));
+            positionsX.add(rand.nextInt(gameBoardWidth/tileSize));
+            positionsY.add(rand.nextInt(gameBoardHeight/tileSize));
         }
         int j = 0;
         for (Snake snake : snakes) {
@@ -175,8 +204,8 @@ public class Game extends JPanel implements ActionListener, KeyListener {
             if (snake.isAlive()) {
                 //wall collisions
                 if (snake.getSnakeHead().x <= 0 || snake.getSnakeHead().y <= 0
-                        || snake.getSnakeHead().x >= (boardWidth - 1) / tileSize
-                        || snake.getSnakeHead().y >= (boardHeight - 1) / tileSize) {
+                        || snake.getSnakeHead().x >= (gameBoardWidth - 1) / tileSize
+                        || snake.getSnakeHead().y >= (gameBoardHeight - 1) / tileSize) {
                     snake.setVelocityX(0);
                     snake.setVelocityY(0);
                     snake.setAlive(false);
@@ -214,6 +243,15 @@ public class Game extends JPanel implements ActionListener, KeyListener {
             --playersLeft;
             if (playersLeft == 1) {
                 gameOver = true;
+                int winnerIndex = 0;
+                for (int i = 0; i < snakes.size(); i++) {
+                    if (snakes.get(i).isAlive()) {
+                        winnerIndex = i;
+                        break;
+                    }
+                }
+                wins[winnerIndex]++;
+                updateStats();
             }
         }
         for (Snake snake : snakes) {

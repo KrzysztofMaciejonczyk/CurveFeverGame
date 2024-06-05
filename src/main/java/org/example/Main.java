@@ -1,11 +1,12 @@
 package org.example;
 
 import javax.swing.*;
+import java.awt.*;
 
 public class Main {
     public static void main(String[] args) {
-        int boardWidth = 800;
-        int boardHeight = 800;
+        int boardWidth = 1000;
+        int boardHeight = 750;
         int players = 4;
 
         JFrame frame = new JFrame("Curve fever");
@@ -14,9 +15,11 @@ public class Main {
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
         frame.setResizable(false);
+        frame.setLayout(new BorderLayout());
 
-        Game game = new Game(boardWidth, boardHeight, players);
-        frame.add(game);
+        Game game = new Game(boardWidth-250, boardHeight, players);
+        frame.add(game, BorderLayout.CENTER);
+        frame.add(game.sidePanel, BorderLayout.EAST);
         frame.pack();
         game.requestFocus();
     }
