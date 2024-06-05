@@ -43,10 +43,10 @@ public class Game extends JPanel implements ActionListener, KeyListener {
         setBackground(Color.BLACK);
         addKeyListener(this);
         setFocusable(true);
-        Color[] colors = {Color.GREEN, Color.BLUE, Color.RED, Color.YELLOW};
+        Color[] colors = {Color.RED, Color.BLUE, Color.GREEN, Color.YELLOW};
         Random rand = new Random();
         for (int i = 0; i < players; i++) {
-            snakes.add(new Snake(new Tile(rand.nextInt(gameBoardWidth/tileSize), rand.nextInt(gameBoardHeight/tileSize)), colors[i]));
+            snakes.add(new Snake(new Tile(rand.nextInt(gameBoardWidth/tileSize-10), rand.nextInt(gameBoardHeight/tileSize-10)), colors[i]));
             snakes.get(i).setVelocityX(0);
             snakes.get(i).setVelocityY(0);
             snakes.get(i).setDirection(Direction.values()[rand.nextInt(8)]);
@@ -117,7 +117,7 @@ public class Game extends JPanel implements ActionListener, KeyListener {
     }
     private void updateStats() {
         for (int i = 0; i < playersInit; i++) {
-            snakeStatsLabels.get(i).setText("Snake " + (i + 1) + " Wins: " + wins[i]);
+            snakeStatsLabels.get(i).setText("Snake " + (i + 1) + ": " + wins[i]);
         }
     }
 
@@ -130,11 +130,6 @@ public class Game extends JPanel implements ActionListener, KeyListener {
         if (gameOver) {
             resetGame();
         }
-        //Grid
-//        for (int x = 0; x < gameBoardWidth/tileSize; x++) {
-//            g.drawLine(x*tileSize, 0, x*tileSize, gameBoardHeight);
-//            g.drawLine(0, x*tileSize, gameBoardWidth, x*tileSize);
-//        }
         //Snakes
         for (Snake snake : snakes) {
             g.setColor(snake.getColor());
@@ -338,8 +333,21 @@ public class Game extends JPanel implements ActionListener, KeyListener {
                         }
                         break;
                 }
-                //Snake body
-                snake.getSnakeBody().add(new Tile(snake.getSnakeHead().x,snake.getSnakeHead().y));
+                //Snake body (sometimes place holes 3 pixel wide)
+                if (snake.isCreatingHole()) {
+                    snake.setHoleSize(snake.getHoleSize()+1);
+                    if (snake.getHoleSize() == 3) {
+                        snake.setHoleSize(0);
+                        snake.setCreatingHole(false);
+                    }
+                }
+                Random rand = new Random();
+                if (rand.nextInt(0, 40) != 0 && !snake.isCreatingHole()) {
+                    snake.getSnakeBody().add(new Tile(snake.getSnakeHead().x,snake.getSnakeHead().y));
+                }
+                else {
+                    snake.setCreatingHole(true);
+                }
                 //Snake head
                 snake.getSnakeHead().x += snake.getVelocityX();
                 snake.getSnakeHead().y += snake.getVelocityY();

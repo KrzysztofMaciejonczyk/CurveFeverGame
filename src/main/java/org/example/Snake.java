@@ -14,6 +14,8 @@ public class Snake {
     private Direction direction = Direction.UP;
     private final Color color;
     private boolean alive = true;
+    private int holeSize = 0;
+    private boolean creatingHole = false;
 
     Snake(Tile snakeHead, Color color) {
         this.snakeHead = snakeHead;
@@ -127,6 +129,22 @@ public class Snake {
         this.turnRight = false;
         this.direction = direction;
         this.alive = true;
+    }
+
+    public int getHoleSize() {
+        return holeSize;
+    }
+
+    public void setHoleSize(int holeSize) {
+        this.holeSize = holeSize;
+    }
+
+    public boolean isCreatingHole() {
+        return creatingHole;
+    }
+
+    public void setCreatingHole(boolean creatingHole) {
+        this.creatingHole = creatingHole;
     }
 }
 
