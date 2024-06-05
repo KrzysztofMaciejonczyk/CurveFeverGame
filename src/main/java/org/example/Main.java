@@ -6,7 +6,7 @@ public class Main {
     public static void main(String[] args) {
         int boardWidth = 800;
         int boardHeight = 800;
-        int players = 2;
+        int players = 4;
 
         JFrame frame = new JFrame("Curve fever");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

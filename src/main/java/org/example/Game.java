@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.*;
 
 public class Game extends JPanel implements ActionListener, KeyListener {
 
@@ -26,6 +27,7 @@ public class Game extends JPanel implements ActionListener, KeyListener {
     javax.swing.Timer gameLoop;
     boolean gameOver = false;
     boolean gameStarted = false;
+    private final ExecutorService collisionExecutorService = Executors.newFixedThreadPool(4);
 
     Game(int boardWidth, int boardHeight, int players) {
         this.boardWidth = boardWidth;
@@ -64,8 +66,18 @@ public class Game extends JPanel implements ActionListener, KeyListener {
                 leftControls.add(KeyEvent.VK_N);
                 rightControls.add(KeyEvent.VK_M);
                 break;
+            case 4:
+                leftControls.add(KeyEvent.VK_LEFT);
+                rightControls.add(KeyEvent.VK_RIGHT);
+                leftControls.add(KeyEvent.VK_Z);
+                rightControls.add(KeyEvent.VK_X);
+                leftControls.add(KeyEvent.VK_N);
+                rightControls.add(KeyEvent.VK_M);
+                leftControls.add(KeyEvent.VK_MULTIPLY);
+                rightControls.add(KeyEvent.VK_SUBTRACT);
+                break;
             default:
-                System.out.println("Acceptable number of players: 1-3");
+                System.out.println("Acceptable number of players: 1-4");
         }
 
         Timer startTimer = new Timer();
@@ -122,7 +134,8 @@ public class Game extends JPanel implements ActionListener, KeyListener {
         }
         int j = 0;
         for (Snake snake : snakes) {
-            snake.reset(positionsX.get(j), positionsY.get(j));
+            Direction direction = Direction.values()[rand.nextInt(8)];
+            snake.reset(positionsX.get(j), positionsY.get(j), direction);
             j++;
         }
         gameOver = false;
@@ -139,9 +152,26 @@ public class Game extends JPanel implements ActionListener, KeyListener {
             }
         }, 2000);
     }
-
     public boolean checkCollisions() {
+        ArrayList<Callable<Boolean>> tasks = new ArrayList<>();
         for (Snake snake : snakes) {
+            tasks.add(() -> checkCollisionsPerSnake(snake));
+        }
+        try {
+            ArrayList<Future<Boolean>> results = (ArrayList<Future<Boolean>>) collisionExecutorService.invokeAll(tasks, 100, TimeUnit.MILLISECONDS);
+            for (Future<Boolean> result : results) {
+                if (result.get()) {
+                    return true;
+                }
+            }
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+    private boolean checkCollisionsPerSnake(Snake snake) {
             if (snake.isAlive()) {
                 //wall collisions
                 if (snake.getSnakeHead().x <= 0 || snake.getSnakeHead().y <= 0
@@ -176,7 +206,6 @@ public class Game extends JPanel implements ActionListener, KeyListener {
                     }
                 }
             }
-        }
         return false;
     }
 

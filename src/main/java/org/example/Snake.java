@@ -117,7 +117,7 @@ public class Snake {
         this.alive = alive;
     }
 
-    public void reset(int positionX, int positionY) {
+    public void reset(int positionX, int positionY, Direction direction) {
         Random rand = new Random();
         this.snakeHead = new Tile(positionX, positionY);
         this.snakeBody.clear();
@@ -125,7 +125,7 @@ public class Snake {
         this.velocityY = 0;
         this.turnLeft = false;
         this.turnRight = false;
-        this.direction = Direction.DOWN;
+        this.direction = direction;
         this.alive = true;
     }
 }
