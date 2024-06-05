@@ -125,12 +125,17 @@ public class Game extends JPanel implements ActionListener, KeyListener {
             snake.reset(positionsX.get(j), positionsY.get(j));
             j++;
         }
+        gameOver = false;
         repaint();
-        new Timer().schedule(new TimerTask() {
+        Timer startTimer = new Timer();
+        startTimer.schedule(new TimerTask() {
             @Override
             public void run() {
+                gameLoop.stop();
                 gameOver = false;
                 gameStarted = true;
+                gameLoop.start();
+                startTimer.cancel();
             }
         }, 2000);
     }
@@ -277,8 +282,10 @@ public class Game extends JPanel implements ActionListener, KeyListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        move();
-        repaint();
+        if (gameStarted) {
+            move();
+            repaint();
+        }
     }
 
     @Override
