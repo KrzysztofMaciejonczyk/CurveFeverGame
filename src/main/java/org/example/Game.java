@@ -46,7 +46,7 @@ public class Game extends JPanel implements ActionListener, KeyListener {
         Color[] colors = {Color.RED, Color.BLUE, Color.GREEN, Color.YELLOW};
         Random rand = new Random();
         for (int i = 0; i < players; i++) {
-            snakes.add(new Snake(new Tile(rand.nextInt(gameBoardWidth/tileSize-10), rand.nextInt(gameBoardHeight/tileSize-10)), colors[i]));
+            snakes.add(new Snake(new Tile(rand.nextInt(gameBoardWidth/tileSize-20), rand.nextInt(gameBoardHeight/tileSize-20)), colors[i]));
             snakes.get(i).setVelocityX(0);
             snakes.get(i).setVelocityY(0);
             snakes.get(i).setDirection(Direction.values()[rand.nextInt(8)]);
@@ -153,8 +153,8 @@ public class Game extends JPanel implements ActionListener, KeyListener {
         ArrayList<Integer> positionsX = new ArrayList<>();
         ArrayList<Integer> positionsY = new ArrayList<>();
         for (int i = 0; i < playersInit; i++) {
-            positionsX.add(rand.nextInt(gameBoardWidth/tileSize));
-            positionsY.add(rand.nextInt(gameBoardHeight/tileSize));
+            positionsX.add(rand.nextInt(gameBoardWidth/tileSize) - 20);
+            positionsY.add(rand.nextInt(gameBoardHeight/tileSize) - 20);
         }
         int j = 0;
         for (Snake snake : snakes) {
@@ -208,8 +208,8 @@ public class Game extends JPanel implements ActionListener, KeyListener {
                 }
                 //snake collisions
                 for (Snake otherSnake : snakes) {
+                    //check collision for body
                     for (Tile bodyTile : otherSnake.getSnakeBody()) {
-                        //check if collision
                         if (bodyTile.x == snake.getSnakeHead().x && bodyTile.y == snake.getSnakeHead().y) {
                             snake.setVelocityX(0);
                             snake.setVelocityY(0);
@@ -236,7 +236,7 @@ public class Game extends JPanel implements ActionListener, KeyListener {
     public void move() {
         if (checkCollisions()) {
             --playersLeft;
-            if (playersLeft == 1) {
+            if (playersLeft <= 1) {
                 gameOver = true;
                 int winnerIndex = 0;
                 for (int i = 0; i < snakes.size(); i++) {

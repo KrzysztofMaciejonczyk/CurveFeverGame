@@ -7,7 +7,6 @@ public class Main {
     public static void main(String[] args) {
         int boardWidth = 1000;
         int boardHeight = 750;
-        int players = 4;
 
         JFrame frame = new JFrame("Curve fever");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -16,11 +15,15 @@ public class Main {
         frame.setVisible(true);
         frame.setResizable(false);
         frame.setLayout(new BorderLayout());
-
-        Game game = new Game(boardWidth-250, boardHeight, players);
-        frame.add(game, BorderLayout.CENTER);
-        frame.add(game.sidePanel, BorderLayout.EAST);
+        Menu mainMenu = new Menu(frame, boardWidth, boardHeight);
+        frame.add(mainMenu);
         frame.pack();
-        game.requestFocus();
+//        if (gameStarted) {
+//            Game game = new Game(boardWidth-250, boardHeight, players);
+//            frame.add(game, BorderLayout.CENTER);
+//            frame.add(game.sidePanel, BorderLayout.EAST);
+//            game.requestFocus();
+//        }
+//        frame.pack();
     }
 }
