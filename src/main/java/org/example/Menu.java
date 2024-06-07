@@ -18,13 +18,19 @@ public class Menu extends JPanel {
         setAlignmentX(Component.CENTER_ALIGNMENT);
         setBackground(new Color(242, 232, 182));
 
-        JLabel titleLabel = new JLabel("Curve Fever");
-        titleLabel.setFont(new Font("Serif", Font.BOLD, 60));
+        this.add(Box.createRigidArea(new Dimension(100,70)));
+
+        JLabel titleLabel = new JLabel("CURVE FEVER");
+        titleLabel.setFont(new Font("Serif", Font.BOLD, 100));
         titleLabel.setForeground(Color.BLACK);
         titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         this.add(titleLabel, BorderLayout.PAGE_START);
 
-        this.add(Box.createRigidArea(new Dimension(0,150)));
+        ImageIcon imageIcon = new ImageIcon("C:\\Users\\Hi I am Krijas\\Downloads\\snake.png"); // Provide the path to your image
+        JLabel imageLabel = new JLabel(imageIcon);
+        imageLabel.setPreferredSize(new Dimension(100, 100));
+        imageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        this.add(imageLabel);
 
         JLabel playersLabel = new JLabel("Select number of players:");
         playersLabel.setFont(new Font("Serif", Font.PLAIN, 36));
@@ -44,7 +50,7 @@ public class Menu extends JPanel {
 
         JButton startButton = new JButton("Start Game");
         startButton.setFont(new Font("Serif", Font.PLAIN, 50));
-        startButton.setBackground(Color.CYAN);
+        startButton.setBackground(new Color(154, 244, 121));
         startButton.setForeground(Color.BLACK);
         startButton.setBorder(BorderFactory.createLineBorder(Color.BLACK, 3));
         startButton.setAlignmentX(Component.CENTER_ALIGNMENT);

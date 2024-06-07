@@ -21,6 +21,7 @@ public class Game extends JPanel implements ActionListener, KeyListener {
     ArrayList<Snake> snakes = new ArrayList<>();
     ArrayList<Integer> leftControls = new ArrayList<>();
     ArrayList<Integer> rightControls = new ArrayList<>();
+    ArrayList<String> stringControls = new ArrayList<>();
     int playersLeft;
     int playersInit;
     int[] wins;
@@ -51,40 +52,31 @@ public class Game extends JPanel implements ActionListener, KeyListener {
             snakes.get(i).setVelocityY(0);
             snakes.get(i).setDirection(Direction.values()[rand.nextInt(8)]);
         }
-        setupSidePanel();
-        switch (players) {
-            case 1:
-                leftControls.add(KeyEvent.VK_LEFT);
-                rightControls.add(KeyEvent.VK_RIGHT);
-                break;
-            case 2:
-                leftControls.add(KeyEvent.VK_LEFT);
-                rightControls.add(KeyEvent.VK_RIGHT);
-                leftControls.add(KeyEvent.VK_Z);
-                rightControls.add(KeyEvent.VK_X);
-                break;
-            case 3:
-                leftControls.add(KeyEvent.VK_LEFT);
-                rightControls.add(KeyEvent.VK_RIGHT);
-                leftControls.add(KeyEvent.VK_Z);
-                rightControls.add(KeyEvent.VK_X);
-                leftControls.add(KeyEvent.VK_N);
-                rightControls.add(KeyEvent.VK_M);
-                break;
-            case 4:
-                leftControls.add(KeyEvent.VK_LEFT);
-                rightControls.add(KeyEvent.VK_RIGHT);
-                leftControls.add(KeyEvent.VK_Z);
-                rightControls.add(KeyEvent.VK_X);
-                leftControls.add(KeyEvent.VK_N);
-                rightControls.add(KeyEvent.VK_M);
-                leftControls.add(KeyEvent.VK_MULTIPLY);
-                rightControls.add(KeyEvent.VK_SUBTRACT);
-                break;
-            default:
-                System.out.println("Acceptable number of players: 1-4");
+        if (players >= 1) {
+            leftControls.add(KeyEvent.VK_LEFT);
+            rightControls.add(KeyEvent.VK_RIGHT);
+            stringControls.add(KeyEvent.getKeyText(KeyEvent.VK_LEFT));
+            stringControls.add(KeyEvent.getKeyText(KeyEvent.VK_RIGHT));
         }
-
+        if (players >= 2) {
+            leftControls.add(KeyEvent.VK_Z);
+            rightControls.add(KeyEvent.VK_X);
+            stringControls.add(KeyEvent.getKeyText(KeyEvent.VK_Z));
+            stringControls.add(KeyEvent.getKeyText(KeyEvent.VK_X));
+        }
+        if (players >= 3) {
+            leftControls.add(KeyEvent.VK_N);
+            rightControls.add(KeyEvent.VK_M);
+            stringControls.add(KeyEvent.getKeyText(KeyEvent.VK_N));
+            stringControls.add(KeyEvent.getKeyText(KeyEvent.VK_M));
+        }
+        if (players >= 4) {
+            leftControls.add(KeyEvent.VK_MULTIPLY);
+            rightControls.add(KeyEvent.VK_SUBTRACT);
+            stringControls.add(KeyEvent.getKeyText(KeyEvent.VK_MULTIPLY));
+            stringControls.add(KeyEvent.getKeyText(KeyEvent.VK_SUBTRACT));
+        }
+        setupSidePanel();
         Timer startTimer = new Timer();
         startTimer.schedule(new TimerTask() {
             @Override
@@ -101,7 +93,7 @@ public class Game extends JPanel implements ActionListener, KeyListener {
         sidePanel.setPreferredSize(new Dimension(250, gameBoardHeight));
         sidePanel.setBackground(new Color(242, 232, 182));
         JLabel title = new JLabel("DASHBOARD");
-        title.setFont(new Font("Comic Sans", Font.PLAIN, 35));
+        title.setFont(new Font("Comic Sans", Font.BOLD, 38));
         title.setForeground(Color.BLACK);
         sidePanel.add(title);
         for (int i = 0; i < playersInit; i++) {
@@ -114,6 +106,39 @@ public class Game extends JPanel implements ActionListener, KeyListener {
             snakeStatsLabels.add(label);
             sidePanel.add(label);
         }
+
+        sidePanel.add(Box.createRigidArea(new Dimension(100,70)));
+
+        JSeparator separator1 = new JSeparator(SwingConstants.HORIZONTAL);
+        separator1.setPreferredSize(new Dimension(250, 10));
+        separator1.setBackground(Color.BLACK);
+        separator1.setForeground(Color.BLACK);
+        sidePanel.add(separator1);
+
+        JLabel controls = new JLabel("Controls");
+        controls.setFont(new Font("Comic Sans", Font.BOLD, 38));
+        controls.setForeground(Color.BLACK);
+        controls.setBackground(new Color(242, 232, 182));
+        controls.setOpaque(true);
+        sidePanel.add(controls);
+        JLabel left = new JLabel(" Left    Right");
+        left.setFont(new Font("Comic Sans", Font.PLAIN, 35));
+        left.setForeground(Color.BLACK);
+        left.setBackground(new Color(242, 232, 182));
+        left.setOpaque(true);
+        sidePanel.add(left);
+        for (int i = 0; i < playersInit*2; i++) {
+            JLabel leftLabel = new JLabel(stringControls.get(i));
+            leftLabel.setFont(new Font("Comic Sans", Font.PLAIN, 20));
+            leftLabel.setBackground(snakes.get(i/2).getColor());
+            leftLabel.setForeground(Color.BLACK);
+            leftLabel.setOpaque(true);
+            leftLabel.setPreferredSize(new Dimension(100,50));
+            leftLabel.setHorizontalAlignment(SwingConstants.CENTER);
+            leftLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 3));
+            sidePanel.add(leftLabel);
+        }
+
     }
     private void updateStats() {
         for (int i = 0; i < playersInit; i++) {
