@@ -18,12 +18,5 @@ public class Main {
         Menu mainMenu = new Menu(frame, boardWidth, boardHeight);
         frame.add(mainMenu);
         frame.pack();
-//        if (gameStarted) {
-//            Game game = new Game(boardWidth-250, boardHeight, players);
-//            frame.add(game, BorderLayout.CENTER);
-//            frame.add(game.sidePanel, BorderLayout.EAST);
-//            game.requestFocus();
-//        }
-//        frame.pack();
     }
 }

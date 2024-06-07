@@ -46,7 +46,7 @@ public class Game extends JPanel implements ActionListener, KeyListener {
         Color[] colors = {Color.RED, Color.BLUE, Color.GREEN, Color.YELLOW};
         Random rand = new Random();
         for (int i = 0; i < players; i++) {
-            snakes.add(new Snake(new Tile(rand.nextInt(gameBoardWidth/tileSize-20), rand.nextInt(gameBoardHeight/tileSize-20)), colors[i]));
+            snakes.add(new Snake(new Tile(rand.nextInt(gameBoardWidth/tileSize - 20) + 10, rand.nextInt(gameBoardHeight/tileSize - 20) + 10), colors[i]));
             snakes.get(i).setVelocityX(0);
             snakes.get(i).setVelocityY(0);
             snakes.get(i).setDirection(Direction.values()[rand.nextInt(8)]);
@@ -153,8 +153,8 @@ public class Game extends JPanel implements ActionListener, KeyListener {
         ArrayList<Integer> positionsX = new ArrayList<>();
         ArrayList<Integer> positionsY = new ArrayList<>();
         for (int i = 0; i < playersInit; i++) {
-            positionsX.add(rand.nextInt(gameBoardWidth/tileSize) - 20);
-            positionsY.add(rand.nextInt(gameBoardHeight/tileSize) - 20);
+            positionsX.add(rand.nextInt(gameBoardWidth/tileSize - 20) + 10);
+            positionsY.add(rand.nextInt(gameBoardHeight/tileSize - 20) + 10);
         }
         int j = 0;
         for (Snake snake : snakes) {
@@ -342,7 +342,7 @@ public class Game extends JPanel implements ActionListener, KeyListener {
                     }
                 }
                 Random rand = new Random();
-                if (rand.nextInt(0, 40) != 0 && !snake.isCreatingHole()) {
+                if (rand.nextInt(0, 100) != 0 && !snake.isCreatingHole()) {
                     snake.getSnakeBody().add(new Tile(snake.getSnakeHead().x,snake.getSnakeHead().y));
                 }
                 else {
