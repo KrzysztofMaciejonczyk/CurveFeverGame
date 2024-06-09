@@ -24,7 +24,7 @@ public class Game extends JPanel implements ActionListener, KeyListener {
     ArrayList<String> stringControls = new ArrayList<>();
     int playersLeft;
     int playersInit;
-    int[] wins;
+    //int[] wins;
 
     javax.swing.Timer gameLoop;
     boolean gameOver = false;
@@ -34,13 +34,16 @@ public class Game extends JPanel implements ActionListener, KeyListener {
     JPanel sidePanel;
     ArrayList<JLabel> snakeStatsLabels = new ArrayList<>();
 
+    Database db = new Database();
+
     Game(int gameBoardWidth, int gameBoardHeight, int players, int tileSize) {
+        db.resetDatabase();
         this.gameBoardWidth = gameBoardWidth;
         this.gameBoardHeight = gameBoardHeight;
         this.tileSize = tileSize;
         playersLeft = players;
         playersInit = players;
-        wins = new int[players];
+       // wins = new int[players];
         setPreferredSize(new Dimension(gameBoardWidth, gameBoardHeight));
         setBackground(Color.BLACK);
         addKeyListener(this);
@@ -98,7 +101,8 @@ public class Game extends JPanel implements ActionListener, KeyListener {
         title.setForeground(Color.BLACK);
         sidePanel.add(title);
         for (int i = 0; i < playersInit; i++) {
-            JLabel label = new JLabel("Snake " + (i + 1) + ": " + wins[i]);
+            //JLabel label = new JLabel("Snake " + (i + 1) + ": " + wins[i]);
+            JLabel label = new JLabel("Snake " + (i + 1) + ": " + db.getWins(i+1));
             label.setFont(new Font("Comic Sans", Font.PLAIN, 30));
             label.setBackground(snakes.get(i).getColor());
             label.setForeground(Color.BLACK);
@@ -143,7 +147,8 @@ public class Game extends JPanel implements ActionListener, KeyListener {
     }
     private void updateStats() {
         for (int i = 0; i < playersInit; i++) {
-            snakeStatsLabels.get(i).setText("Snake " + (i + 1) + ": " + wins[i]);
+            //snakeStatsLabels.get(i).setText("Snake " + (i + 1) + ": " + wins[i]);
+            snakeStatsLabels.get(i).setText("Snake " + (i + 1) + ": " + db.getWins(i+1));
         }
     }
 
@@ -271,7 +276,8 @@ public class Game extends JPanel implements ActionListener, KeyListener {
                         break;
                     }
                 }
-                wins[winnerIndex]++;
+                db.updateWins(winnerIndex+1);
+                //wins[winnerIndex]++;
                 updateStats();
             }
         }
