@@ -2,7 +2,6 @@ package org.example;
 
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.Random;
 
 public class Snake {
     private Tile snakeHead;
@@ -120,7 +119,6 @@ public class Snake {
     }
 
     public void reset(int positionX, int positionY, Direction direction) {
-        Random rand = new Random();
         this.snakeHead = new Tile(positionX, positionY);
         this.snakeBody.clear();
         this.velocityX = 0;

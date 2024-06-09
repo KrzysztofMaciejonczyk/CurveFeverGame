@@ -8,11 +8,13 @@ public class Menu extends JPanel {
     private final JFrame frame;
     private final int boardWidth;
     private final int boardHeight;
+    private final int tileSize;
 
-    public Menu(JFrame frame, int boardWidth, int boardHeight) {
+    public Menu(JFrame frame, int boardWidth, int boardHeight, int tileSize) {
         this.frame = frame;
         this.boardWidth = boardWidth;
         this.boardHeight = boardHeight;
+        this.tileSize = tileSize;
         setPreferredSize(new Dimension(boardWidth, boardHeight));
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
         setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -64,7 +66,7 @@ public class Menu extends JPanel {
 
     private void startGame(int players) {
         frame.getContentPane().removeAll();
-        Game game = new Game(boardWidth - 250, boardHeight, players);
+        Game game = new Game(boardWidth - 250, boardHeight, players, tileSize);
         frame.add(game);
         frame.add(game.sidePanel, BorderLayout.EAST);
         frame.pack();

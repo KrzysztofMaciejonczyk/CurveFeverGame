@@ -16,7 +16,7 @@ public class Game extends JPanel implements ActionListener, KeyListener {
 
     int gameBoardWidth;
     int gameBoardHeight;
-    int tileSize = 5;
+    int tileSize;
 
     ArrayList<Snake> snakes = new ArrayList<>();
     ArrayList<Integer> leftControls = new ArrayList<>();
@@ -34,9 +34,10 @@ public class Game extends JPanel implements ActionListener, KeyListener {
     JPanel sidePanel;
     ArrayList<JLabel> snakeStatsLabels = new ArrayList<>();
 
-    Game(int gameBoardWidth, int gameBoardHeight, int players) {
+    Game(int gameBoardWidth, int gameBoardHeight, int players, int tileSize) {
         this.gameBoardWidth = gameBoardWidth;
         this.gameBoardHeight = gameBoardHeight;
+        this.tileSize = tileSize;
         playersLeft = players;
         playersInit = players;
         wins = new int[players];
@@ -224,8 +225,8 @@ public class Game extends JPanel implements ActionListener, KeyListener {
             if (snake.isAlive()) {
                 //wall collisions
                 if (snake.getSnakeHead().x <= 0 || snake.getSnakeHead().y <= 0
-                        || snake.getSnakeHead().x >= (gameBoardWidth - 1) / tileSize
-                        || snake.getSnakeHead().y >= (gameBoardHeight - 1) / tileSize) {
+                        || snake.getSnakeHead().x >= gameBoardWidth / tileSize
+                        || snake.getSnakeHead().y >= gameBoardHeight / tileSize) {
                     snake.setVelocityX(0);
                     snake.setVelocityY(0);
                     snake.setAlive(false);
