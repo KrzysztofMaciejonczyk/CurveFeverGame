@@ -28,7 +28,7 @@ public class Menu extends JPanel {
         titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         this.add(titleLabel, BorderLayout.PAGE_START);
 
-        ImageIcon imageIcon = new ImageIcon("C:\\Users\\Hi I am Krijas\\Downloads\\snake.png"); // Provide the path to your image
+        ImageIcon imageIcon = new ImageIcon("src/main/resources/images/snake.png");
         JLabel imageLabel = new JLabel(imageIcon);
         imageLabel.setPreferredSize(new Dimension(100, 100));
         imageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
